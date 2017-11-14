@@ -1,5 +1,7 @@
 package com.example.demo.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,18 +11,33 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    @Qualifier("dataSource")
+    private DataSource dataSource;
+
     @Bean
     UserDetailsService customUserDetailsService() {
         return new CustomUserDetailsService();
     }
+
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    JdbcTokenRepositoryImpl tokenRepository(){
+        JdbcTokenRepositoryImpl j = new JdbcTokenRepositoryImpl();
+        j.setDataSource(dataSource);
+        return j;
     }
 
     @Override
@@ -36,14 +53,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/index", "/test").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login?error")
-                .permitAll()
-                .and()
-                .logout().permitAll();
+                .antMatchers("/", "/index","/loginResult/**").permitAll()
+                .anyRequest().authenticated().and()
+                .formLogin().loginPage("/index").loginProcessingUrl("/login")
+                .successForwardUrl("/login/success").failureForwardUrl("/login/failure").permitAll().and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/index")
+                .deleteCookies("JSESSIONID").invalidateHttpSession(true).permitAll().and()
+                .csrf().disable()
+                .rememberMe().rememberMeParameter("remember-me")
+                .rememberMeCookieName("remember-me")
+                .tokenValiditySeconds(1209600)
+                .tokenRepository(tokenRepository());
     }
 }
