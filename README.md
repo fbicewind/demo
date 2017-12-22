@@ -1,5 +1,5 @@
 # Spring全家桶Demo
-Spring boot + Spring Data Jpa + Spring Security + thymeleaf + lombok + kotlin
+Spring boot + Spring Data Jpa + Spring Security + thymeleaf + lombok + kotlin + ehcache
 ### Spring boot
 使用最新的spring boot 2.0.0.M6
 ### Spring Data Jpa
@@ -12,3 +12,5 @@ Spring boot + Spring Data Jpa + Spring Security + thymeleaf + lombok + kotlin
 使用@Log4j注解，去掉没必要的很长又复制粘贴的Log代码
 ### kotlin
 使用最新最热的kotlin，来简化单元测试
+### ehcache
+简单使用ehcache，加快查询速度
