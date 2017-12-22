@@ -14,4 +14,6 @@ public interface UserService {
 
     public Page<User> findUsersByPage(Pageable pageable, User vo);
 
+    public void saveOrUpdateUser(User vo);
+
 }

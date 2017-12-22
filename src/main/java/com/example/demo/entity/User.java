@@ -3,9 +3,12 @@ package com.example.demo.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -14,7 +17,7 @@ public class User {
     private String password;
     private int role;
     private String gender;
-    private int age;
+    private String age;
 
     public int getId() {
         return id;
@@ -56,11 +59,11 @@ public class User {
         this.gender = gender;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

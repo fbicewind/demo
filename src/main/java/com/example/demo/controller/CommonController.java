@@ -33,4 +33,15 @@ public class CommonController {
         result.setCode(Constants.SUCCESS.equals(status) ? Status.SUCCESS.getCode() : Status.FAILURE.getCode());
         return result;
     }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @RequestMapping(value = "/scope/calculateTodayScope")
+    @ResponseBody
+    public Boolean calculateTodayScope() {
+        return true;
+    }
 }

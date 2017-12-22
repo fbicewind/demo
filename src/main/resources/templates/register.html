@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>注册</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container">
+    <h2 style="text-align: center;">新用户注册</h2>
+    <div>
+        <form class="form-horizontal" role="form" id="registerForm">
+            <div class="form-group">
+                <label for="username" class="col-sm-3 control-label">用户名<span class="must">&nbsp;*</span></label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="请输入名字" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-3 control-label">密码<span class="must">&nbsp;*</span></label>
+                <div class="col-sm-9">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="age" class="col-sm-3 control-label">年龄&nbsp;&nbsp;</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="age" name="age" placeholder="年龄" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="age" class="col-sm-3 control-label">性别&nbsp;&nbsp;</label>
+                <div class="col-sm-9">
+                    <label class="radio-inline">
+                        <input type="radio" name="gender" value="1" checked> 男
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="gender" value="0"> 女
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="button" id="register" class="btn btn-default">注册</button>
+                    <a style="float: right;" href="/index" class="btn btn-default">返回登录</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/index.js"></script>
+<script>
+    $(function(){
+        $('#register').click(function () {
+            submitForm();
+        });
+    });
+
+    function submitForm() {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        if (username == '' || password == ''){
+            alert('用户名或密码不能为空');
+            return;
+        }
+        $.ajax({
+            type : 'GET',
+            url : '/user/validateName',
+            data : {
+                username : username
+            },
+            dataType : 'json',
+            success : function (result) {
+                if (result.code == '0'){
+                    alert('用户名已存在');
+                    $('#username').val('');
+                    return;
+                }
+                doRegister();
+            }
+        });
+    }
+    
+    function doRegister() {
+        $.ajax({
+            type : 'POST',
+            url : '/user/saveUser',
+            data : $('#registerForm').serialize(),
+            dataType : 'json',
+            success : function (result) {
+                if(result.code == '0'){
+                    alert('注册失败！');
+                    return;
+                }
+                var r = confirm("注册成功！是否返回登录?");
+                if(r){
+                    window.location.href = '/index';
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
