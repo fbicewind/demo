@@ -8,7 +8,7 @@ Spring boot + Spring Data Jpa + Spring Security + thymeleaf + lombok + kotlin + 
 简单使用spring security，实现直接表单登陆，或者ajax异步登陆，使用带数据源的remember me功能实现自动登录
 ### thymeleaf
 简单使用spring boot官方推荐的thymeleaf基本实现前后端分离
-### log4j
+### lombok
 使用@Log4j注解，去掉没必要的很长又复制粘贴的Log代码
 ### kotlin
 使用最新最热的kotlin，来简化单元测试
